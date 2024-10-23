@@ -10,3 +10,9 @@ import cv2
 categories = os.listdir('C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train')
 categories.sort
 print(categories)
+
+# Cargamos el modelo guardado
+path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/AlfabetoV2.h5'
+model = tf.keras.models.load_mode(path_for_saved_model)
+
+print(model.summary())
