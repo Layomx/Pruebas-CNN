@@ -16,3 +16,31 @@ path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer
 model = tf.keras.models.load_mode(path_for_saved_model)
 
 print(model.summary())
+
+def classify_image(imageFile):
+    x = []
+
+    img = Image.open(imageFile)
+    img.load()
+    img = img.resize((224, 224), Image.ANTIALIAS)
+
+    x = image.img_to_array(img)
+    x = np.expand_dims(x, axis = 0)
+    x = preprocess_input(x)
+    print(x.shape)
+
+    pred = model.predict(x)
+    categoryValue = np.argmax(pred, axis = 1)
+    print(categoryValue) 
+
+    categoryValue = categoryValue[0]
+    print(categoryValue)
+
+    result = categories(categoryValue)
+
+    return result
+
+imagePath = "C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/dataset/train/Letter_A_may_404.png"
+resultText = classify_image(imagePath)
+print(resultText)
+
