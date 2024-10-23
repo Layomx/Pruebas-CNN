@@ -4,6 +4,13 @@ from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
 from tensorflow.keras.optimizers import Adam
 
+# Verificando disponibilidad de GPU
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print("GPU disponible:", gpus)
+else:
+    print("No se encontró GPU, usando la CPU.")
+
 train_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train'
 validation_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/validate'
 
@@ -32,7 +39,7 @@ for layer in model.layers[:-5]:
     
 # Compilando el modelo
 
-epochs = 10
+epochs = 25
 optimizer = Adam(learning_rate = 0.001)
 
 model.compile(loss = "categorical_crossentropy", optimizer = optimizer, metrics = ['accuracy'])
