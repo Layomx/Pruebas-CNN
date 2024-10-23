@@ -45,3 +45,9 @@ imagePath = "C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segu
 resultText = classify_image(imagePath)
 print(resultText)
 
+img = cv2.imread(imagePath)
+img = cv2.putText(img, resultText, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+
+cv2.imshow("img", img)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
