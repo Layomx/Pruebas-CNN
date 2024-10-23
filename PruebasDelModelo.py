@@ -1,5 +1,5 @@
-import os 
-import tensorflow.keras.preprocessing import image
+import os
+from tensorflow.keras.preprocessing import image
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from PIL import Image
 import numpy as np 
