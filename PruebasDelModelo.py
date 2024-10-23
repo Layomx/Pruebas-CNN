@@ -41,11 +41,15 @@ def classify_image(imageFile):
 
     return result
 
-imagePath = "C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/dataset/train/Letter_s_min_872.png"
+imagePath = 'C:/Users/drake/OneDrive/Documentos/S-NEGRA.jpg'
 resultText = classify_image(imagePath)
 print(resultText)
 
 img = cv2.imread(imagePath)
+if img is None:
+    print("Error")
+    exit()
+
 img = cv2.putText(img, resultText, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
 
 cv2.imshow("img", img)

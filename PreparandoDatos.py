@@ -68,7 +68,7 @@ def split_data(SOURCE, TRAINING, VALIDATION, SPLIT_SIZE):
         print(f'Copied to validation: {destination}')
 
 # Definiciones de rutas y creación de carpetas destino
-target_folder = r'C:\Users\drake\OneDrive\Documentos\Universidad\6) Tercer Año, Segundo Semestre\Hackaton\Dataset\Set-Original\dataset_for_model'
+target_folder = r'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model'
 train_path = os.path.join(target_folder, 'train')
 validate_path = os.path.join(target_folder, 'validate')
 
@@ -92,7 +92,7 @@ for category in categories:
     if not os.path.exists(validate_dest_path):
         os.mkdir(validate_dest_path)
 
-    source_path = os.path.join(r'C:\Users\drake\OneDrive\Documentos\Universidad\6) Tercer Año, Segundo Semestre\Hackaton\Dataset\Set-Original\Dataset', category)
+    source_path = os.path.join(r'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/Dataset', category)
 
     print(f'Copying from: {source_path} to: {train_dest_path} and {validate_dest_path}')
 
