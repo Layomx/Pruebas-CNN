@@ -33,25 +33,25 @@ model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['ac
 # Directorio que contiene las imágenes de prueba sin clasificación
 test_dir = 'C:/Users/drake/OneDrive/Documentos/Universidad/test'
 
-# Asegúrate de que el tamaño de las imágenes coincida con el tamaño que espera tu modelo
-image_size = (224, 224)  # Cambia esto al tamaño esperado por tu modelo
+# Nos aseguramos que el tamaño de las imágenes coincida con el tamaño que espera el modelo MobileNet
+image_size = (224, 224)  # Declaramos el tamaño esperado
 
-# Listar todas las imágenes en la carpeta de test
+# Listamos todas las imágenes en la carpeta de test
 test_images = [f for f in os.listdir(test_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
-# Hacer predicciones para cada imagen
+# Haciendo predicciones para cada imagen
 for image_name in test_images:
     # Cargar y preprocesar la imagen
     img_path = os.path.join(test_dir, image_name)
     img = cv2.imread(img_path)
     img = cv2.resize(img, image_size)
     img = img.astype('float32') / 255.0  # Escalar los valores de los píxeles
-    img = np.expand_dims(img, axis=0)  # Añadir dimensión para batch (modelo espera [batch_size, height, width, channels])
+    img = np.expand_dims(img, axis=0)  # Añadir dimensión para el batch
     
-    # Hacer la predicción
+    # Haciendo la prediccion
     prediction = model.predict(img)
     
-    # Obtener la clase predicha (opcional, dependiendo de cómo quieras usar los resultados)
+    # Obteniendo la clase predicha
     predicted_class = np.argmax(prediction, axis=-1)
     
     print(f"Imagen: {image_name}, Predicción: {predicted_class}")
