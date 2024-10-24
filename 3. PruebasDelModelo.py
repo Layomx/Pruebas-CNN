@@ -1,6 +1,6 @@
 import os
-from tensorflow.keras.preprocessing import image
-from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
+from tensorflow.keras.preprocessing import image # type: ignore
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input # type: ignore
 from PIL import Image
 import numpy as np 
 import tensorflow as tf 
