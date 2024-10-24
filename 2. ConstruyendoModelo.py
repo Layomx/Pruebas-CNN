@@ -6,6 +6,8 @@ from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout # typ
 from tensorflow.keras.optimizers import Adam # type: ignore
 from tensorflow.keras.callbacks import EarlyStopping # type: ignore
 
+# Esta serie de codigos es especifica para construir el modelo #
+
 # Verificando disponibilidad de GPU
 gpus = tf.config.list_physical_devices('GPU')
 if gpus:
@@ -13,11 +15,11 @@ if gpus:
 else:
     print("No se encontró GPU, usando la CPU.")
 
-# Carga de los archivos de entrenamiento y validacion
+# Carga de los archivos de entrenamiento y validacion anteriormente creados
 train_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train'
 validation_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/validate'
 
-# Preprocesamos las imagenes que se vayan obteniendo de el dataset
+# Preprocesamos las imagenes que se vayan obteniendo de el dataset, aplicando aumentacion y demas
 train_datagen = ImageDataGenerator(
     preprocessing_function=preprocess_input,
     rotation_range=20,
@@ -43,7 +45,7 @@ validGenerator = valid_datagen.flow_from_directory(
     batch_size=30
 )
 
-# Este bloque es especifico para construir el modelo
+# Este bloque es especifico para construir el modelo en base a la modelo pre entrenado de MobileNetV2
 baseModel = MobileNetV2(weights='imagenet', include_top = False) # Detenemos la ultima capa
 
 x = baseModel.output
@@ -60,7 +62,7 @@ model = Model(inputs= baseModel.input, outputs = predictLayer)
 
 print(model.summary())
 
-# Congelando capas del anterior modelo
+# Congelando capas del modelo pre entrenado
 
 for layer in model.layers[:-5]:
     layer.trainable = False
@@ -71,7 +73,7 @@ epochs = 25
 optimizer = Adam(learning_rate = 0.0001)
 model.compile(loss = "categorical_crossentropy", optimizer = optimizer, metrics = ['accuracy'])
 
-# Implementacion de Early Stopping para evitar un sobreajuste
+# Implementacion de Early Stopping para evitar sobreajustes
 early_stopping = EarlyStopping(monitor='val_loss', patience = 5, restore_best_weights=True)
 
 # Entrenamiento del modelo 
