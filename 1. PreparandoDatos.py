@@ -10,8 +10,8 @@ import shutil
 splitsize = .85
 categories = []
 
-# Establecemos nuestra carpeta "fuente" en donde tengamos guardado el dataser
-source_folder = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/Dataset'
+# Establecemos nuestra carpeta "fuente" en donde tengamos guardado el dataset
+source_folder = ''
 folders = os.listdir(source_folder)
 print(folders) # Imprimimos las carpetas que esten dentro, asi verificamos si estamos en la direccion correcta
 
@@ -23,7 +23,7 @@ categories.sort()
 print(categories) # Imprimimos cada categoria o carpeta en orden
 
 # Creando una carpeta destino donde queremos que se guarden nuestros datos ordenados, sino existe, el programa la creara por si mismo
-target_folder = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model'
+target_folder = ''
 existDataSetPath = os.path.exists(target_folder)
 if existDataSetPath == False:
     os.mkdir(target_folder)
@@ -74,7 +74,7 @@ def split_data(SOURCE, TRAINING, VALIDATION, SPLIT_SIZE):
         print(f'Copied to validation: {destination}')
 
 # Definiciones de rutas y creación de carpetas destino
-target_folder = r'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model'
+target_folder = r'' # Es necesario mantener la 'r' antes de la direccion de la carpeta para evitar problemas por caracteres especiales como la ñ
 train_path = os.path.join(target_folder, 'train')
 validate_path = os.path.join(target_folder, 'validate')
 
@@ -98,7 +98,7 @@ for category in categories:
     if not os.path.exists(validate_dest_path):
         os.mkdir(validate_dest_path)
 
-    source_path = os.path.join(r'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/Dataset', category)
+    source_path = os.path.join(r'', category)
 
     print(f'Copying from: {source_path} to: {train_dest_path} and {validate_dest_path}')
 
