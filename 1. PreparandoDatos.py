@@ -2,21 +2,27 @@ import os
 import random
 import shutil
 
+# Este codigo es especial debido a que aqui preparamos los datos del dataset, divimos nuestra gran cantidad de imagenes en una serie de carpetas
+# La principal es train que sirve como el entrenamiento y val, que es la validacion y comparacion
+# Organizar el dataset es necesario para lograr su correcto entrenamiento #
+
+# Porcentaje en que separaremos las imagenes, 85% para train, 15% para val
 splitsize = .85
 categories = []
 
+# Establecemos nuestra carpeta "fuente" en donde tengamos guardado el dataser
 source_folder = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/Dataset'
 folders = os.listdir(source_folder)
-print(folders)
+print(folders) # Imprimimos las carpetas que esten dentro, asi verificamos si estamos en la direccion correcta
 
 for subfolder in folders:
     if os.path.isdir(source_folder + '/' + subfolder):
         categories.append(subfolder)
 
 categories.sort()
-print(categories)
+print(categories) # Imprimimos cada categoria o carpeta en orden
 
-# Creando una carpeta destino
+# Creando una carpeta destino donde queremos que se guarden nuestros datos ordenados, sino existe, el programa la creara por si mismo
 target_folder = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model'
 existDataSetPath = os.path.exists(target_folder)
 if existDataSetPath == False:
@@ -26,11 +32,11 @@ if existDataSetPath == False:
 def split_data(SOURCE, TRAINING, VALIDATION, SPLIT_SIZE):
     files = []
 
-    # Recorriendo las subcarpetas de mayúsculas y minúsculas
-    for case_folder in ['may', 'min']:  # Definición de las subcarpetas
+    # Recorremos las subcarpetas de mayúsculas y minúsculas
+    for case_folder in ['may', 'min']:  # Definicion de las subcarpetas
         case_folder_path = os.path.join(SOURCE, case_folder)  # Ruta completa de la subcarpeta
 
-        if os.path.isdir(case_folder_path):  # Verificando que sea una carpeta
+        if os.path.isdir(case_folder_path):  # Verificamos que sea una carpeta
             # Lista todos los archivos en la subcarpeta
             for filename in os.listdir(case_folder_path):
                 file_path = os.path.join(case_folder_path, filename)  # Ruta completa del archivo
@@ -43,7 +49,7 @@ def split_data(SOURCE, TRAINING, VALIDATION, SPLIT_SIZE):
 
     print(f'Total valid files: {len(files)}')
 
-    # Calcula el número de archivos para entrenamiento
+    # Calculando el número de archivos para entrenamiento
     training_length = int(len(files) * SPLIT_SIZE)
     shuffle_set = random.sample(files, len(files))  # Mezclando  aleatoriamente los archivos
     training_set = shuffle_set[:training_length]  # Seleccionando el conjunto de entrenamiento
@@ -51,11 +57,11 @@ def split_data(SOURCE, TRAINING, VALIDATION, SPLIT_SIZE):
 
     # Copiando las imágenes de entrenamiento
     for file_path in training_set:
-        # Determina la subcarpeta correspondiente (may o min)
+        # Determinando la subcarpeta en que pertenezca (may o min)
         case_folder = 'may' if 'may' in file_path else 'min'
         destination = os.path.join(TRAINING, case_folder, os.path.basename(file_path))  # Destino del archivo
         os.makedirs(os.path.dirname(destination), exist_ok=True)  # Crea la carpeta destino si no existe
-        shutil.copyfile(file_path, destination)  # Copia el archivo
+        shutil.copyfile(file_path, destination)  # Copiando el archivo
         print(f'Copied to training: {destination}')
 
     # Copiando las imágenes de validación
@@ -78,7 +84,7 @@ if not os.path.exists(train_path):
 if not os.path.exists(validate_path):
     os.mkdir(validate_path)
 
-# Lista de las carpetas de letras
+# Lista de las carpetas de letras es necesario colocarlos en el orden correcto
 categories = ['a', 'b', 'c', 'd' , 'e' , 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'n_', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']  # Agrega las letras que necesites
 
 # Ejecutando la función para cada carpeta de letra
@@ -97,4 +103,4 @@ for category in categories:
     print(f'Copying from: {source_path} to: {train_dest_path} and {validate_dest_path}')
 
     # Llamando a la función de separación de datos, pasándole las rutas correctas
-    split_data(source_path, train_dest_path, validate_dest_path, 0.85)  # Ajusta el SPLIT_SIZE si es necesario
+    split_data(source_path, train_dest_path, validate_dest_path, splitsize)  # El splitsize puede variar, depende de lo que deseen
