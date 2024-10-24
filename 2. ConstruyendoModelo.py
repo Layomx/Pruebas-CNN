@@ -2,8 +2,9 @@ import tensorflow as tf
 from tensorflow.keras import Model
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.callbacks import EarlyStopping 
 
 # Verificando disponibilidad de GPU
 gpus = tf.config.list_physical_devices('GPU')
@@ -12,20 +13,46 @@ if gpus:
 else:
     print("No se encontró GPU, usando la CPU.")
 
+# Carga de los archivos de entrenamiento y validacion
 train_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train'
 validation_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/validate'
 
-trainGenerator = ImageDataGenerator(preprocessing_function = preprocess_input).flow_from_directory(train_path, target_size=(224, 224), batch_size=30)
-validGenerator = ImageDataGenerator(preprocessing_function = preprocess_input).flow_from_directory(validation_path, target_size=(224, 224), batch_size=30)
+# Preprocesamos las imagenes que se vayan obteniendo de el dataset
+train_datagen = ImageDataGenerator(
+    preprocessing_function=preprocess_input,
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest'
+)
 
-# Construyendo el modelo
-baseModel = MobileNetV2(weights='imagenet', include_top = False) # Se detiene la ultima capa
+trainGenerator = train_datagen.flow_from_directory(
+    train_path,
+    target_size=(224, 224),
+    batch_size=30
+)
+
+valid_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
+
+validGenerator = valid_datagen.flow_from_directory(
+    validation_path,
+    target_size=(224, 224),
+    batch_size=30
+)
+
+# Este bloque es especifico para construir el modelo
+baseModel = MobileNetV2(weights='imagenet', include_top = False) # Detenemos la ultima capa
 
 x = baseModel.output
 x = GlobalAveragePooling2D()(x)
-x = Dense(512, activation = 'relu')(x)
-x = Dense(256, activation = 'relu')(x)
-x = Dense(128, activation = 'relu')(x)
+x = Dense(512, activation='relu')(x)
+x = Dropout(0.5)(x)  # Añadimos Dropout para evitar posibles sobreajustes
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.5)(x)
+x = Dense(128, activation='relu')(x)
 
 predictLayer = Dense(27, activation = 'softmax')(x) # Densidad de 27 por la cantidad de clases (letras del abecedario)
 
@@ -41,14 +68,15 @@ for layer in model.layers[:-5]:
 # Compilando el modelo
 
 epochs = 25
-optimizer = Adam(learning_rate = 0.001)
-
+optimizer = Adam(learning_rate = 0.0001)
 model.compile(loss = "categorical_crossentropy", optimizer = optimizer, metrics = ['accuracy'])
 
-# Entrenamiento
+# Implementacion de Early Stopping para evitar un sobreajuste
+early_stopping = EarlyStopping(monitor='val_loss', patience = 5, restore_best_weights=True)
 
-model.fit(trainGenerator, validation_data = validGenerator, epochs = epochs)
+# Entrenamiento del modelo 
+model.fit(trainGenerator, validation_data = validGenerator, epochs = epochs, callbacks = [early_stopping])
 
-# Guardando el modelo
-path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/AlfabetoV2.h5'
+# Guardando el modelo en la direccion que queramos
+path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/Alfabeto25V2.h5'
 model.save(path_for_saved_model)
