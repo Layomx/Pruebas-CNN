@@ -1,57 +1,57 @@
 import os
 from tensorflow.keras.preprocessing import image # type: ignore
+from tensorflow.keras.optimizers import Adam # type: ignore
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input # type: ignore
-from PIL import Image
-import numpy as np 
-import tensorflow as tf 
-import cv2 
+from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
+from tensorflow.keras.utils import to_categorical # type: ignore
+import numpy as np
+import tensorflow as tf
+import cv2
 
 # Lista de las clases
 categories = os.listdir('C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train')
-categories.sort
-print(categories)
+categories.sort()
 
-# Cargamos el modelo guardado
-path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/AlfabetoV2.h5'
+test_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/dataset/test'
+test = ImageDataGenerator(preprocessing_function=preprocess_input)
+
+test_images = test.flow_from_directory(
+    test_path,
+    target_size=(224, 224),
+    batch_size=30,
+    class_mode='categorical'
+)
+
+# Cargar el modelo guardado
+path_for_saved_model = "C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/Alfabeto25V2.h5"
 model = tf.keras.models.load_model(path_for_saved_model)
 
-print(model.summary())
+# Compilar el modelo
+optimizer = Adam(learning_rate=0.0001)
+model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
 
-def classify_image(imageFile):
-    x = []
+# Directorio que contiene las imágenes de prueba sin clasificación
+test_dir = 'C:/Users/drake/OneDrive/Documentos/Universidad/test'
 
-    img = Image.open(imageFile).convert('L')
-    img = img.convert('RGB')
-    img.load()
-    img = img.resize((224, 224), Image.Resampling.LANCZOS)
+# Asegúrate de que el tamaño de las imágenes coincida con el tamaño que espera tu modelo
+image_size = (224, 224)  # Cambia esto al tamaño esperado por tu modelo
 
-    x = image.img_to_array(img)
-    x = np.expand_dims(x, axis = 0)
-    x = preprocess_input(x)
-    print(x.shape)
+# Listar todas las imágenes en la carpeta de test
+test_images = [f for f in os.listdir(test_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
-    pred = model.predict(x)
-    categoryValue = np.argmax(pred, axis = 1)
-    print(categoryValue) 
-
-    categoryValue = categoryValue[0]
-    print(categoryValue)
-
-    result = categories[categoryValue]
-
-    return result
-
-imagePath = 'C:/Users/drake/OneDrive/Documentos/S-NEGRA.jpg'
-resultText = classify_image(imagePath)
-print(resultText)
-
-img = cv2.imread(imagePath)
-if img is None:
-    print("Error")
-    exit()
-
-img = cv2.putText(img, resultText, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-
-cv2.imshow("img", img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# Hacer predicciones para cada imagen
+for image_name in test_images:
+    # Cargar y preprocesar la imagen
+    img_path = os.path.join(test_dir, image_name)
+    img = cv2.imread(img_path)
+    img = cv2.resize(img, image_size)
+    img = img.astype('float32') / 255.0  # Escalar los valores de los píxeles
+    img = np.expand_dims(img, axis=0)  # Añadir dimensión para batch (modelo espera [batch_size, height, width, channels])
+    
+    # Hacer la predicción
+    prediction = model.predict(img)
+    
+    # Obtener la clase predicha (opcional, dependiendo de cómo quieras usar los resultados)
+    predicted_class = np.argmax(prediction, axis=-1)
+    
+    print(f"Imagen: {image_name}, Predicción: {predicted_class}")
