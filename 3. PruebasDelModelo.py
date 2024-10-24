@@ -8,11 +8,12 @@ import numpy as np
 import tensorflow as tf
 import cv2
 
-# Lista de las clases
-categories = os.listdir('C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train')
+# Lista de las clases que usaremos para probar el modelo, pueden ser desde la misma carpeta de train
+categories = os.listdir('')
 categories.sort()
 
-test_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/dataset/test'
+# Lista de las clases que usaremos para probar el modelo, pen este caso seria la direccion de las imagenes con las que queremos probar el modelo
+test_path = ''
 test = ImageDataGenerator(preprocessing_function=preprocess_input)
 
 test_images = test.flow_from_directory(
@@ -22,16 +23,16 @@ test_images = test.flow_from_directory(
     class_mode='categorical'
 )
 
-# Cargar el modelo guardado
-path_for_saved_model = "C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/Alfabeto25V2.h5"
+# Cargar el modelo guardado, tenemos que recordar donde lo guardamos, su formato es h5
+path_for_saved_model = ""
 model = tf.keras.models.load_model(path_for_saved_model)
 
-# Compilar el modelo
+# Compilamos el modelo cargados
 optimizer = Adam(learning_rate=0.0001)
 model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=['accuracy'])
 
-# Directorio que contiene las imágenes de prueba sin clasificación
-test_dir = 'C:/Users/drake/OneDrive/Documentos/Universidad/test'
+# Directorio que contiene las imágenes de prueba sin clasificación aqui se debe poner el mismo directorio que se utilizo antes para test_path
+test_dir = ''
 
 # Nos aseguramos que el tamaño de las imágenes coincida con el tamaño que espera el modelo MobileNet
 image_size = (224, 224)  # Declaramos el tamaño esperado
