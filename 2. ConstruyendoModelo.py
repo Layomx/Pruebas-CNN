@@ -1,10 +1,10 @@
 import tensorflow as tf
-from tensorflow.keras import Model
-from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.callbacks import EarlyStopping 
+from tensorflow.keras import Model # type: ignore
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input # type: ignore
+from tensorflow.keras.preprocessing.image import ImageDataGenerator # type: ignore
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout # type: ignore
+from tensorflow.keras.optimizers import Adam # type: ignore
+from tensorflow.keras.callbacks import EarlyStopping # type: ignore
 
 # Verificando disponibilidad de GPU
 gpus = tf.config.list_physical_devices('GPU')
