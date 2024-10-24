@@ -15,9 +15,9 @@ if gpus:
 else:
     print("No se encontró GPU, usando la CPU.")
 
-# Carga de los archivos de entrenamiento y validacion anteriormente creados
-train_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/train'
-validation_path = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/validate'
+# Carga de los archivos de entrenamiento y validacion anteriormente creados o que tengamos listos
+train_path = ''
+validation_path = ''
 
 # Preprocesamos las imagenes que se vayan obteniendo de el dataset, aplicando aumentacion y demas
 train_datagen = ImageDataGenerator(
@@ -80,5 +80,5 @@ early_stopping = EarlyStopping(monitor='val_loss', patience = 5, restore_best_we
 model.fit(trainGenerator, validation_data = validGenerator, epochs = epochs, callbacks = [early_stopping])
 
 # Guardando el modelo en la direccion que queramos
-path_for_saved_model = 'C:/Users/drake/OneDrive/Documentos/Universidad/6) Tercer Año, Segundo Semestre/Hackaton/Dataset/Set-Original/dataset_for_model/Alfabeto25V2.h5'
+path_for_saved_model = ''
 model.save(path_for_saved_model)
